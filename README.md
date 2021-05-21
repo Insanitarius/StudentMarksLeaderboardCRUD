@@ -1,6 +1,5 @@
-#General
+# General
 1. Download the code, run Frontend and Backend simultaneously
-2.
 
 
 # Frontend
@@ -12,6 +11,6 @@
 
 # Backend
 
--> Initialize .env variables for the DB and connect
--> npm install
--> npm start
+1. Initialize .env variables for the DB and connect
+2.  npm install
+3. npm start
