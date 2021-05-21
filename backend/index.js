@@ -29,12 +29,24 @@ app.post("/create", (req, res) => {
     [rollNo, name, maths, phy, chem, totalMarks, percentage],
     (err, result) => {
       if (err) {
-        console.log(err);
+        return res.status(400).json({
+          error: err.sqlMessage,
+        });
       } else {
         res.send("Values Inserted");
       }
     }
   );
+});
+
+app.get("/fetchStudents", (req, res) => {
+  db.query("SELECT * FROM STUDENT", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(result);
+    }
+  });
 });
 
 app.listen(process.env.PORT, () => {

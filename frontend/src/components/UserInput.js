@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useState } from "react";
+import { Redirect, Link, useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
@@ -10,7 +10,6 @@ const UserSchema = Yup.object().shape({
     .required("Please enter Student's Name"),
   rollNo: Yup.number("Must be a number")
     .typeError("Must be a number")
-    .min(0, "RollNo cannot be negative")
     .required("Please enter the Roll Number"),
   maths: Yup.number("Must be a number")
     .typeError("Must be a number")
@@ -30,11 +29,16 @@ const UserSchema = Yup.object().shape({
 });
 
 const UserInput = () => {
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
   return (
     <div className="container">
-      <div className="row mb-5">
+      <div className="row mb-0">
+        <Link to="/" className="mb-0 mt-4" style={{ textDecoration: "none" }}>
+          <i className="fas fa-chevron-left mx-2"></i>Back to Home
+        </Link>
         <div className="col-lg-12 text-center">
-          <h1 className="mt-5">Enter Student Details</h1>
+          <h1 className="mt-3 mb-4">Enter Student Details</h1>
         </div>
       </div>
       <div className="row justify-content-center">
@@ -42,22 +46,29 @@ const UserInput = () => {
           <Formik
             initialValues={{ name: "" }}
             validationSchema={UserSchema}
-            onSubmit={(values, setSubmitting) => {
-              // console.log(values);
-              // alert(values.name);
+            onSubmit={(values) => {
+              setLoading(true);
               Axios.post(process.env.REACT_APP_BACKENDURL, {
                 name: values.name,
                 rollNo: values.rollNo,
                 maths: values.maths,
                 phy: values.physics,
                 chem: values.chemistry,
-              }).then(() => {
-                console.log("Success");
-              });
-              setSubmitting(false);
+              })
+                .then(() => {
+                  alert("Success");
+                  setTimeout(() => {
+                    setLoading(false);
+                    history.push("/");
+                  }, 1000);
+                })
+                .catch(() => {
+                  alert("Same RollNo already exists.");
+                  setLoading(false);
+                });
             }}
           >
-            {({ touched, errors, isSubmitting }) => (
+            {({ touched, errors }) => (
               <Form>
                 <div className="form-group">
                   <label htmlFor="name">Student Name</label>
@@ -146,10 +157,10 @@ const UserInput = () => {
 
                 <button
                   type="submit"
-                  className="btn btn-primary btn-block"
-                  disabled={isSubmitting}
+                  className="btn btn-primary btn-block mt-4"
+                  disabled={loading}
                 >
-                  {isSubmitting ? "Please wait..." : "Submit"}
+                  {loading ? "Please wait..." : "Submit"}
                 </button>
               </Form>
             )}
