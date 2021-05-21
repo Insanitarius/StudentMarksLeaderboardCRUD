@@ -4,7 +4,7 @@
 
 # Frontend
 
-1. Initialize .env variables (REACT_APP_BACKENDURL=localhosturlOfBackend/create and REACT_APP_FETCHSTUDENTS=localhosturlOfBackend/fetchStudents) Insert your own localhost url.
+1. Initialize .env variables
 2. npm install
 3. npm start
 
